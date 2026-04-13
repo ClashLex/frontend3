@@ -30,3 +30,15 @@ npm run build        # production build
 npm test             # unit tests
 npm run test:e2e     # Playwright integration tests
 ```
+
+## Upcoming Improvements
+- Dark mode toggle
+- Search bar
+- Category filter pills
+- Reading time on posts
+- Bookmark button
+- Featured post card
+- Empty state UI
+- Hero stats
+- Font upgrade (Lora + DM Sans)
+- Hover accent animation on cards
