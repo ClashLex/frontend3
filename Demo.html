@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ink. — Ideas worth reading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════ */
+:root {
+  --bg:           #faf8f5;
+  --surface:      #ffffff;
+  --surface2:     #f4f0ea;
+  --border:       #e8e2d9;
+  --text:         #1a1714;
+  --muted:        #7a7167;
+  --navy:         #032147;
+  --primary:      #209dd7;
+  --secondary:    #753991;
+  --accent:       #ecad0a;
+  --accent-warm:  #c8602a;
+  --tag-bg:       #eee9e2;
+  --tag-text:     #5c5248;
+  --nav-h:        62px;
+  --radius:       16px;
+  --radius-sm:    10px;
+  --shadow:       0 1px 4px rgba(0,0,0,.06), 0 4px 20px rgba(0,0,0,.07);
+  --shadow-lg:    0 8px 40px rgba(0,0,0,.13);
+  --t:            .22s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="dark"] {
+  --bg:           #111009;
+  --surface:      #1a1814;
+  --surface2:     #221f1a;
+  --border:       #2c2822;
+  --text:         #f0ebe3;
+  --muted:        #8a8278;
+  --navy:         #a8c4e0;
+  --primary:      #4db8f0;
+  --secondary:    #b07acc;
+  --accent:       #f0c030;
+  --accent-warm:  #e07848;
+  --tag-bg:       #272320;
+  --tag-text:     #b0a898;
+  --shadow:       0 1px 4px rgba(0,0,0,.3), 0 4px 20px rgba(0,0,0,.35);
+  --shadow-lg:    0 8px 40px rgba(0,0,0,.55);
+}
+
+/* ══════════════════════════════════════════
+   RESET
+══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  transition: background var(--t), color var(--t);
+  min-height: 100vh;
+}
+
+/* ══════════════════════════════════════════
+   NAV
+══════════════════════════════════════════ */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  height: var(--nav-h);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--t);
+}
+.nav-inner {
+  max-width: 1120px; margin: 0 auto; height: 100%;
+  padding: 0 clamp(1rem,5vw,2rem);
+  display: flex; align-items: center; gap: 1rem;
+}
+.logo {
+  font-family: 'Lora', serif; font-weight: 700;
+  font-size: 1.3rem; letter-spacing: -.03em;
+  color: var(--text); text-decoration: none; flex-shrink: 0;
+}
+.logo em { color: var(--accent-warm); font-style: normal; }
+
+.search-wrap {
+  flex: 1; max-width: 380px; margin-left: 1.5rem; position: relative;
+}
+.search-wrap svg {
+  position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+  width: 15px; height: 15px; color: var(--muted); pointer-events: none;
+}
+.search-input {
+  width: 100%; padding: .48rem .75rem .48rem 2.1rem;
+  background: var(--surface2); border: 1px solid transparent;
+  border-radius: 8px; font-size: .85rem; color: var(--text);
+  font-family: 'DM Sans', sans-serif; outline: none;
+  transition: all var(--t);
+}
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus {
+  border-color: var(--primary);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+}
+
+.nav-right { margin-left: auto; display: flex; align-items: center; gap: .6rem; }
+
+.theme-btn {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface);
+  cursor: pointer; display: grid; place-items: center;
+  color: var(--text); transition: all var(--t);
+}
+.theme-btn:hover { border-color: var(--primary); color: var(--primary); }
+.theme-btn svg { width: 17px; height: 17px; }
+.i-sun { display: block; }
+.i-moon { display: none; }
+[data-theme="dark"] .i-sun { display: none; }
+[data-theme="dark"] .i-moon { display: block; }
+
+.btn {
+  padding: .45rem 1rem; border-radius: 8px;
+  font-size: .83rem; font-family: 'DM Sans', sans-serif;
+  font-weight: 600; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: .35rem;
+  transition: all var(--t); border: none;
+}
+.btn-ghost {
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--text); }
+.btn-primary {
+  background: var(--secondary); color: #fff;
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--secondary) 30%, transparent);
+}
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--secondary) 40%, transparent);
+}
+
+/* ══════════════════════════════════════════
+   HERO
+══════════════════════════════════════════ */
+.hero {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  padding: clamp(3rem,8vw,5.5rem) clamp(1rem,5vw,2rem);
+}
+.hero-inner {
+  max-width: 1120px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center; gap: 3rem;
+}
+.badge {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent-warm); font-size: .72rem; font-weight: 700;
+  padding: .3rem .8rem; border-radius: 50px;
+  letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1.2rem;
+}
+.hero h1 {
+  font-family: 'Lora', serif;
+  font-size: clamp(2.4rem,5.5vw,4rem);
+  line-height: 1.1; letter-spacing: -.03em;
+  color: var(--navy); max-width: 520px;
+}
+.hero h1 em { color: var(--primary); font-style: italic; }
+.hero p {
+  color: var(--muted); font-size: 1.05rem;
+  max-width: 440px; margin-top: .9rem;
+}
+.hero-actions {
+  margin-top: 2rem; display: flex; align-items: center; gap: .75rem;
+}
+.hero-actions .btn-link {
+  color: var(--primary); font-size: .875rem;
+  font-weight: 600; text-decoration: none;
+}
+.hero-actions .btn-link:hover { text-decoration: underline; }
+
+/* stats */
+.hero-stats {
+  display: flex; flex-direction: column; gap: 1rem;
+}
+.stat-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 1.2rem 1.8rem;
+  text-align: center; box-shadow: var(--shadow);
+  transition: all var(--t); min-width: 130px;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.stat-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 2.2rem; font-weight: 500; color: var(--accent-warm);
+}
+.stat-lbl { font-size: .72rem; color: var(--muted); margin-top: .15rem; text-transform: uppercase; letter-spacing: .06em; }
+
+/* ══════════════════════════════════════════
+   FILTER
+══════════════════════════════════════════ */
+.feed-header {
+  max-width: 1120px; margin: 0 auto;
+  padding: 2.5rem clamp(1rem,5vw,2rem) 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.feed-title {
+  font-family: 'Lora', serif; font-size: 1.4rem;
+  font-weight: 700; color: var(--navy);
+}
+.post-count {
+  font-family: 'DM Mono', monospace;
+  font-size: .78rem; color: var(--muted);
+}
+
+.filter-bar {
+  max-width: 1120px; margin: 0 auto;
+  padding: 1rem clamp(1rem,5vw,2rem) 1.5rem;
+  display: flex; gap: .5rem; flex-wrap: wrap;
+}
+.pill {
+  padding: .35rem .9rem; border-radius: 50px;
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: .78rem; font-weight: 600; cursor: pointer;
+  color: var(--muted); transition: all var(--t);
+  font-family: 'DM Sans', sans-serif;
+}
+.pill:hover { border-color: var(--primary); color: var(--primary); }
+.pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* ══════════════════════════════════════════
+   GRID
+══════════════════════════════════════════ */
+.posts-grid {
+  max-width: 1120px; margin: 0 auto;
+  padding: 0 clamp(1rem,5vw,2rem) 5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+  gap: 1.4rem;
+}
+
+/* ── POST CARD ── */
+.post-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  display: flex; flex-direction: column; gap: .85rem;
+  box-shadow: var(--shadow);
+  cursor: pointer; text-decoration: none; color: inherit;
+  position: relative; overflow: hidden;
+  transition: transform var(--t), box-shadow var(--t), border-color var(--t);
+}
+.post-card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--t);
+}
+.post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: color-mix(in srgb, var(--primary) 25%, var(--border));
+}
+.post-card:hover::after { transform: scaleX(1); }
+
+/* featured */
+.post-card.featured {
+  grid-column: span 2;
+  background: linear-gradient(135deg, var(--surface), color-mix(in srgb, var(--primary) 5%, var(--surface)));
+  border-color: color-mix(in srgb, var(--primary) 20%, var(--border));
+}
+
+.latest-badge {
+  position: absolute; top: 1rem; right: 1rem;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent-warm); font-size: .68rem; font-weight: 700;
+  padding: .2rem .55rem; border-radius: 50px;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+
+/* meta */
+.card-meta {
+  display: flex; align-items: center; gap: .5rem;
+  font-size: .75rem; color: var(--muted);
+}
+.avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--primary);
+  display: grid; place-items: center;
+  font-size: .65rem; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.avatar.sec { background: var(--secondary); }
+.avatar.acc { background: var(--accent-warm); }
+.dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+
+.card-title {
+  font-family: 'Lora', serif;
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--navy); line-height: 1.3;
+  transition: color var(--t);
+}
+.post-card:hover .card-title { color: var(--primary); }
+.post-card.featured .card-title { font-size: 1.35rem; }
+
+.card-excerpt {
+  font-size: .875rem; color: var(--muted);
+  line-height: 1.65;
+  display: -webkit-box; -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.card-footer {
+  margin-top: auto;
+  display: flex; align-items: center; justify-content: space-between; gap: .5rem;
+}
+.tags { display: flex; gap: .35rem; flex-wrap: wrap; }
+.tag {
+  padding: .18rem .55rem; border-radius: 5px;
+  background: var(--tag-bg); color: var(--tag-text);
+  font-size: .68rem; font-weight: 600;
+  font-family: 'DM Mono', monospace;
+}
+.read-time { font-size: .72rem; color: var(--muted); white-space: nowrap; }
+
+.bookmark-btn {
+  width: 28px; height: 28px; border-radius: 7px;
+  border: 1px solid var(--border); background: transparent;
+  cursor: pointer; color: var(--muted);
+  display: grid; place-items: center;
+  transition: all var(--t); flex-shrink: 0;
+}
+.bookmark-btn:hover { color: var(--accent-warm); border-color: var(--accent-warm); }
+.bookmark-btn.saved { color: var(--accent-warm); border-color: var(--accent-warm); background: color-mix(in srgb, var(--accent-warm) 10%, transparent); }
+.bookmark-btn svg { width: 13px; height: 13px; }
+
+/* read more */
+.read-more {
+  font-size: .78rem; font-weight: 700;
+  color: var(--primary); text-decoration: none;
+  display: inline-flex; align-items: center; gap: .3rem;
+}
+.read-more:hover { text-decoration: underline; }
+
+/* ══════════════════════════════════════════
+   EMPTY STATE
+══════════════════════════════════════════ */
+.empty {
+  grid-column: 1/-1; text-align: center;
+  padding: 5rem 1rem;
+  border: 2px dashed var(--border); border-radius: var(--radius);
+  background: var(--surface);
+}
+.empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+.empty h3 { font-family: 'Lora', serif; color: var(--navy); margin-bottom: .4rem; }
+.empty p { color: var(--muted); font-size: .9rem; }
+
+/* ══════════════════════════════════════════
+   BOTTOM CTA
+══════════════════════════════════════════ */
+.bottom-cta {
+  max-width: 1120px; margin: 0 auto;
+  padding: 0 clamp(1rem,5vw,2rem) 5rem;
+}
+.cta-inner {
+  text-align: center; border-top: 1px solid var(--border);
+  padding-top: 3.5rem;
+}
+.cta-inner p { color: var(--muted); font-size: .9rem; margin-bottom: 1.2rem; }
+
+/* ══════════════════════════════════════════
+   POST VIEW (modal)
+══════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,.5); backdrop-filter: blur(6px);
+  display: none; place-items: center; padding: 1rem;
+}
+.modal-overlay.open { display: grid; }
+.modal {
+  background: var(--surface); border-radius: var(--radius);
+  max-width: 680px; width: 100%; max-height: 85vh;
+  overflow-y: auto; padding: 2.5rem;
+  box-shadow: var(--shadow-lg); position: relative;
+  animation: modalIn .25s ease;
+}
+@keyframes modalIn {
+  from { transform: translateY(20px) scale(.97); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+.modal-close {
+  position: absolute; top: 1.2rem; right: 1.2rem;
+  width: 32px; height: 32px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface2);
+  cursor: pointer; font-size: 1.1rem; display: grid; place-items: center;
+  color: var(--muted); transition: all var(--t);
+}
+.modal-close:hover { color: var(--text); border-color: var(--text); }
+.modal-meta { display: flex; align-items: center; gap: .5rem; font-size: .8rem; color: var(--muted); margin-bottom: 1.5rem; }
+.modal h2 { font-family: 'Lora', serif; font-size: 1.8rem; color: var(--navy); line-height: 1.2; margin-bottom: 1.2rem; }
+.modal-body { font-size: .95rem; line-height: 1.8; color: var(--text); }
+.modal-body p + p { margin-top: 1rem; }
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem clamp(1rem,5vw,2rem);
+  display: flex; justify-content: center; align-items: center;
+  gap: 1.5rem; flex-wrap: wrap;
+  font-size: .8rem; color: var(--muted);
+}
+footer a { color: var(--muted); text-decoration: none; }
+footer a:hover { color: var(--primary); }
+
+/* ══════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+.hero-inner { animation: fadeUp .5s ease both; }
+.feed-header { animation: fadeUp .5s .1s ease both; }
+.filter-bar  { animation: fadeUp .5s .15s ease both; }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 700px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: row; }
+  .post-card.featured { grid-column: span 1; }
+  .search-wrap { display: none; }
+  .posts-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════ -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#">Ink<em>.</em></a>
+
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input class="search-input" id="searchInput" type="text" placeholder="Search posts…">
+    </div>
+
+    <div class="nav-right">
+      <button class="theme-btn" id="themeBtn">
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <a class="btn btn-ghost" href="#">Log in</a>
+      <a class="btn btn-primary" href="#">Start writing</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="badge">✦ Open Publishing</div>
+      <h1>Ideas worth<br><em>reading.</em></h1>
+      <p>A space for writers to share their thoughts. Read the latest posts or start writing your own.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Start writing
+        </a>
+        <a class="btn-link" href="#posts">Browse posts ↓</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-num" id="statPosts">3</div>
+        <div class="stat-lbl">Posts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statWriters">3</div>
+        <div class="stat-lbl">Writers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEED HEADER ════════════════════════════════════ -->
+<div class="feed-header" id="posts">
+  <h2 class="feed-title">Latest Posts</h2>
+  <span class="post-count" id="postCount"></span>
+</div>
+
+<!-- ══ FILTER BAR ════════════════════════════════════ -->
+<div class="filter-bar" id="filterBar">
+  <button class="pill active" data-cat="all">All</button>
+  <button class="pill" data-cat="travel">✈ Travel</button>
+  <button class="pill" data-cat="tech">💻 Tech</button>
+  <button class="pill" data-cat="lifestyle">🌿 Lifestyle</button>
+  <button class="pill" data-cat="opinion">💬 Opinion</button>
+  <button class="pill" data-cat="kerala">🌴 Kerala</button>
+</div>
+
+<!-- ══ GRID ═══════════════════════════════════════════ -->
+<div class="posts-grid" id="postsGrid"></div>
+
+<!-- ══ BOTTOM CTA ════════════════════════════════════ -->
+<div class="bottom-cta">
+  <div class="cta-inner">
+    <p>Have something to share with the world?</p>
+    <a class="btn btn-primary" href="#">Start writing for free</a>
+  </div>
+</div>
+
+<!-- ══ FOOTER ════════════════════════════════════════ -->
+<footer>
+  <span>© 2026 Ink.</span>
+  <a href="#">About</a>
+  <a href="#">Privacy</a>
+  <a href="#">Terms</a>
+  <a href="#">GitHub</a>
+</footer>
+
+<!-- ══ POST MODAL ════════════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-meta" id="modalMeta"></div>
+    <h2 id="modalTitle"></h2>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────
+const posts = [
+  {
+    id: 1,
+    title: "✨ Wander Far, Feel Free: Why Traveling Is the Best Investment You Can Make",
+    excerpt: "Travel is more than boarding a plane, snapping photos, and ticking destinations off a list. It's an experience that reshapes you long after you've unpacked your bags. Every journey teaches empathy, adaptability, and a sense of wonder that no classroom can replicate.",
+    body: `<p>Travel is more than boarding a plane, snapping photos, and ticking destinations off a list. It's an experience that reshapes you long after you've unpacked your bags.</p><p>Every journey teaches empathy, adaptability, and a sense of wonder that no classroom can replicate. When you step into an unfamiliar culture, you learn to see the world through a different 
