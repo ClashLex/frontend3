@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 @plugin "@tailwindcss/typography";
 
 @theme {
@@ -13,12 +14,46 @@
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* ── New: warm card surface ── */
+  --color-surface: #f9f7f4;
+  --color-border:  #e8e2d9;
 }
 
+/* ── Base ── */
 body {
   background: var(--color-background);
   color: var(--color-foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: 'DM Sans', var(--font-sans), Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+/* ── Headings → Lora serif ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Lora', serif;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* ── Smooth scroll ── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Focus ring (accessibility) ── */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Card hover lift ── */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
 }
 
 /* TipTap editor caret and placeholder */
@@ -35,6 +70,7 @@ body {
 .prose h2,
 .prose h3 {
   color: var(--color-navy);
+  font-family: 'Lora', serif;
 }
 
 .prose a {
